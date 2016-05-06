@@ -3,7 +3,8 @@ import numpy as np
 import optparse, sys, os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-n_comp = 6
+labels = ['Synchrotron', 'CMB', 'HI', 'Dust1', 'Dust2', 'Free-Free']
+n_comp = len(labels)
 kB = 1.38065e-23
 C = 2.99792e8
 h = 6.62607e-34
@@ -66,7 +67,7 @@ sys.stdout.flush()
 print 'Reading GSM Data...',
 sys.stdout.flush()
 if resolution < 300:
-    map_ni = np.fromfile(script_path + '/data/highres_maps.bin', dtype='float32').reshape((n_comp, 12*nside**2))
+    map_ni = np.array([np.fromfile(script_path + '/data/highres_%s_map.bin'%lb, dtype='float32') for lb in labels])
 else:
     map_ni = np.loadtxt(script_path + '/data/lowres_maps.txt')
 spec_nf = np.loadtxt(script_path + '/data/spectra.txt')
