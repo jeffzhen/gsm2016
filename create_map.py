@@ -110,11 +110,11 @@ sys.stdout.flush()
 print 'Outputting Result to %s...'%oppath,
 sys.stdout.flush()
 if oppath[-4:] == '.npz':
-    np.savez(oppath, result)
+    np.savez(oppath, result.astype('float32'))
 elif oppath[-4:] == '.bin':
     result.astype('float32').tofile(oppath)
 else:
-    print '(Saving as a text file may be very slow. For faster speed, try .bin for binary or .npz for compressed numpy format.)...',
+    print '(Saving as a text file may be very slow. For faster speed, try .bin for single precision binary or .npz for compressed numpy format.)...',
     sys.stdout.flush()
     np.savetxt(oppath, result, fmt='%.3e')
 
