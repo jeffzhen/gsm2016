@@ -107,9 +107,16 @@ result *= conversion
 print '1 MJysr == %.2e %s'%(conversion, unit)
 sys.stdout.flush()
 
-print 'Outputting Result...',
+print 'Outputting Result to %s...'%oppath,
 sys.stdout.flush()
-np.savetxt(oppath, result, fmt='%.3e')
+if oppath[-4:] == '.npz':
+    np.savez(oppath, result)
+elif oppath[-4:] == '.bin':
+    result.astype('float32').tofile(oppath)
+else:
+    print '(Saving as a text file may be very slow. For faster speed, try .bin for binary or .npz for compressed numpy format.)...',
+    sys.stdout.flush()
+    np.savetxt(oppath, result, fmt='%.3e')
 
 print 'All done.'
 sys.stdout.flush()
