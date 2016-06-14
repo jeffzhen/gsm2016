@@ -25,17 +25,19 @@ o = optparse.OptionParser()
 o.add_option('-f', '--frequency', action='store', type='float', default=100., help='Frequency of the map in GHz, default 100 GHz.')
 o.add_option('-r', '--resolution', action='store', type='float', default=0, help='Required resolution in arcminutes. The output resolution will be either 5 degrees or 0.8 degrees below 10 GHz, either 5 degrees or 0.4 degrees above 10 GHz.')
 o.add_option('-u', '--unit', action='store', default='MJysr', help='Output unit, default MJysr. Other options include TCMB for CMB temperatures in Kelvin or TRJ for Rayleigh-Jeans temperatures in Kelvin.')
-o.add_option('-o', '--outputpath', action='store', default=None, help='Path to store the output map.')
+o.add_option('-o', '--outputpath', action='store', default=None, help='Path to store the output map, including file name.')
+o.add_option('--ring', action='store_true', default=False, help='Output HEALPIX RING format. Default is NEST.')
 
 opts, args = o.parse_args(sys.argv[1:])
 freq = opts.frequency
 resolution = opts.resolution
 unit = opts.unit
 oppath = opts.outputpath
+convert_ring = opts.ring
 
 #checking inputs
 if oppath is None:
-    oppath = script_path + '/output/gsm2016_%.3eghz_%s_healpynest.txt'%(freq, unit)
+    oppath = script_path + '/output/gsm2016_%.3eghz_%s_healpy%s.txt'%(freq, unit, ['NEST', 'RING'][int(convert_ring)])
 elif os.path.isfile(oppath):
     print "PATH ERROR: %s already exists."%oppath
 if unit not in ['MJysr', 'TCMB', 'TRJ']:
@@ -106,6 +108,17 @@ else:
 result *= conversion
 print '1 MJysr == %.2e %s'%(conversion, unit)
 sys.stdout.flush()
+
+if convert_ring:
+    print 'Converting to HEALPIX RING...',
+    sys.stdout.flush()
+    try:
+        import healpy as hp
+    except:
+        print "Healpy package not found. Cannot convert to HEALPIX RING format."
+    result = hp.reorder(result, n2r=True)
+    print 'done.'
+    sys.stdout.flush()
 
 print 'Outputting Result to %s...'%oppath,
 sys.stdout.flush()
