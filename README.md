@@ -1,1 +1,1 @@
-# Coming May 11th, 2016.
+For sanity check, compare to this video: https://youtu.be/9hMaWUsykEw.
