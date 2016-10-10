@@ -48,7 +48,7 @@ if resolution == 0:
 if resolution < 300:
     nside = 1024
     if freq < 10:
-        op_resolution = 48
+        op_resolution = 56
     else:
         op_resolution = 24
 else:
